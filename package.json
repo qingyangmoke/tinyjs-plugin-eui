@@ -20,7 +20,7 @@
     "tests"
   ],
   "scripts": {
-    "start": "webpack-dev-server --devtool source-map --inline --hot --host 0.0.0.0",
+    "dev": "webpack-dev-server --devtool source-map --hot --host 0.0.0.0 --port 8083 --progress --colors --config ./config/webpack.dev.config.js",
     "build": "webpack --progress --colors",
     "doc": "rm -rf docs && jsdoc README.md src -r -d docs -t node_modules/docdash",
     "lint": "eslint src/** tests/**",

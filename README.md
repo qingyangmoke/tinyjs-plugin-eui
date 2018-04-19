@@ -34,3 +34,6 @@ var Eui = require('tinyjs-plugin-eui');
 
 ## 依赖
 - `Tiny.js`: [Link](http://tinyjs.net/#/docs/api)
+
+
+http://localhost:8080/demo/buttons.html

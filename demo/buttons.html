@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>Tiny-按钮</title>
   <meta charset="utf-8">
-  <script src="libs/tiny.debug.js"></script>
-  <script src="../dist/index.debug.js"></script>
+  <!-- <script src="https://gw.alipayobjects.com/as/g/tiny/tiny/1.1.5/tiny.js"></script> -->
+  <!-- <script src="https://gw.alipayobjects.com/as/g/tiny-plugins/tinyjs-plugin-extract/1.0.7/index.js"></script> -->
+  <script src="http://localhost/gitlab/tiny/dist/tiny.debug.js"></script>
   <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2,minimum-scale=1,user-scalable=1">
   <style type="text/css">
     body,
@@ -12,58 +14,233 @@
     canvas {
       padding: 0;
       margin: 0;
-      -webkit-tap-highlight-color: rgba(0, 0, 0, 0)
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      background-color: #ffffff;
+      border: none;
+      user-select: none;
     }
   </style>
 </head>
 
 <body>
+  <script src="../dist/index.debug.js"></script>
+  <script>
 
-<script>
-  var config = {
-    showFPS: true, // 显示帧频
-    dpi: 1, // 分辨率
-    renderOptions: {
-      backgroundColor: 0x2a3145 // 画布背景色
+    window.onerror = function (msg) {
+      alert(msg);
     }
-  };
 
-  var app = new Tiny.Application(config);
+    const ui = Tiny.eui;
+    ui.debug.enable = true;
 
-  function setTitle(title, container) {
-    var title = new Tiny.Text(title, {
-      fontSize: '18px',
-      fill: 'white',
+    var config = {
+      showFPS: true, // 显示帧频
+      referWidth: 375,
+      dpi: 2, // 分辨率
+      // newWidth: 750,
+      // newHeight: 1334,
+      renderType: 2, // 1 webgl 2 canvas
+      renderOptions: {
+        // antialias: true,
+        // clearBeforeRender: true,
+        // transparent: false,
+        backgroundColor: 0xeeeeee // 画布背景色
+      }
+    };
+
+    var container = new Tiny.Container();
+
+
+    var app = new Tiny.Application(config);
+    // var renderSwitch = false;
+    // app.render = function () {
+    //   renderSwitch = !renderSwitch;
+    //   if (renderSwitch) {
+    //     app.renderer.render(app.camera);
+    //   }
+    // };
+    var viewport = new ui.Component(400, 620);
+    viewport.debugFill = {
+      color: 0xffffff,
+      alpha: 1,
+    };
+    viewport.debug = true;
+
+    var scrollerView = new ui.ScrollerView(400, 400);
+    scrollerView.x = 100;
+    scrollerView.y = 100;
+    scrollerView.scale.set(1.5, 1.5);
+    scrollerView.debugFill = {
+      color: 0xffffff,
+      alpha: 1,
+    };
+    scrollerView.debug = true;
+    scrollerView.viewport = viewport;
+    scrollerView.addChild(viewport);
+    scrollerView.debugFill = {
+      color: 0xfff,
+      alpha: 1,
+    };
+    scrollerView.debug = true;
+    scrollerView.on('touchstart', function (e) {
+      console.log('touchstart', e.data.getLocalPosition(button));
     });
+    scrollerView.clip(0, 0, scrollerView.width, scrollerView.height);
 
-    title.position.set(Tiny.WIN_SIZE.width / 2, 30);
-    title.anchor.set(0.5, 0);
-    container.addChild(title);
-  }
+    container.addChild(scrollerView);
 
-  var container = new Tiny.Container();
+    app.run(container);
 
-  setTitle('Tiny-按钮', container);
+    // app.run(container);
 
-  app.run(container);
+    var label, button, image;
+    function ready(res) {
+      button = new ui.Button(120, 110);
+      button.backgroundImage = "member_png";
+      button.setStateData(ui.STATE.DOWN, {
+        alpha: 0.9,
+        scaleX: 0.99,
+        scaleY: 0.99,
+      });
+      button.setStateData(ui.STATE.DOWN, {
+        backgroundImage: 'video_png'
+      });
+      // button.setStateData(ui.STATE.DOWN, 'video_png');
+      button.setStateData(ui.STATE.DISABLED, {
+        alpha: 0.5
+      });
+      // button.anchor.set(0.5, 0.5);
+      button.x = button.width;
+      button.y = button.height;
+      button.on('pointerdown', function (e) {
+        console.log('pointerdown', e.data.getLocalPosition(button));
+      });
+      button.on('pointerup', function (e) {
+        console.log('pointerup', e);
+      });
+      button.on('pointermove', function (e) {
+        var pt = e.data.getLocalPosition(button);
+        var outside = true;
+        if (pt.x <= button.width && pt.x >= 0 && pt.y >= 0 && pt.y < button.height) {
+          outside = false;
+        }
+        console.log('pointermove', e.target, outside);
+      })
+      button.on('longpress', function (e) {
+        console.log('longpress', e);
+      })
+      button.on('tap', function (e) {
+        console.log('tap', e);
+      })
+      button.on('pointerupoutside', function (e) {
+        console.log('touchendoutside', e);
+      })
+      button.label = '提交';
+      button.label.style.fill = 'red';
+      button.label.style.fill = ['#ffffff', '#00ff99'];
+      button.label.style.stroke = '#4a1850';
+      button.label.style.strokeThickness = 5;
+      button.label.style.dropShadow = true;
+      button.label.style.dropShadowColor = '#000000';
+      button.label.style.dropShadowBlur = 4;
+      button.label.style.dropShadowAngle = Math.PI / 6;
+      button.label.style.dropShadowDistance = 6;
+      viewport.addChild(button);
 
-  //设置别名
-  var dragonBones = Tiny.DragonBones;
-  var resources = Tiny.Loader.resources;
+      label = new ui.Label('这是一个文本', 200, 100);
+      label.style.align = 'center';
+      label.style.color = 'red';
+      label.anchor.set(0.5, 0.5);
+      label.x = label.width / 2;
+      label.y = label.height / 2;
+      viewport.addChild(label);
 
-  var armatureDisplay;
+      label.debug = true;
+      button.debug = true;
 
-  function initDragon() {
+      radioButton = new ui.RadioButton();
+      radioButton.groupName = 'clothes';
+      radioButton.source = 'radio_no_png';
+      radioButton.setStateData(ui.STATE.CHECKED, 'radio_yes_png');
+      radioButton.x = 10;
+      radioButton.y = 250;
+      viewport.addChild(radioButton);
 
-    container.addChild(armatureDisplay);
-  }
+      radioButton2 = new ui.RadioButton();
+      radioButton2.groupName = 'clothes';
+      radioButton2.source = 'radio_no_png';
+      radioButton2.setStateData(ui.STATE.CHECKED, 'radio_yes_png');
+      radioButton2.x = 60;
+      radioButton2.y = 250;
+      viewport.addChild(radioButton2);
 
-  Tiny.Loader
-    .add("dragonBonesData", "./resource/Dragon/Dragon_ske.json")
-    .load(function () {
-      initDragon();
-    });
-</script>
+      radioButton3 = new ui.RadioButton();
+      radioButton3.groupName = 'shoes';
+      radioButton3.source = 'radio_no_png';
+      radioButton3.setStateData(ui.STATE.CHECKED, 'radio_yes_png');
+      radioButton3.x = 110;
+      radioButton3.y = 250;
+      viewport.addChild(radioButton3);
+
+      checkBoxButton = new ui.CheckBoxButton();
+      checkBoxButton.source = 'checkbox_no_png';
+      checkBoxButton.setStateData(ui.STATE.CHECKED, 'checkbox_yes_png');
+      // checkBoxButton.setStateData(ui.STATE.DOWN, {
+      //   scaleX: 1.2,
+      //   scaleY: 1.2,
+      // });
+      checkBoxButton.x = 200;
+      checkBoxButton.y = 250;
+      viewport.addChild(checkBoxButton);
+
+      checkBoxButton2 = new ui.CheckBoxButton();
+      checkBoxButton2.source = 'checkbox_no_png';
+      checkBoxButton2.setStateData(ui.STATE.CHECKED, 'checkbox_yes_png');
+      checkBoxButton2.x = 260;
+      checkBoxButton2.y = 250;
+      viewport.addChild(checkBoxButton2);
+
+      checkBoxButton2.on('change', function (e) {
+        console.log(e);
+      });
+
+
+      image = new ui.Image(120, 110);
+      image.source = 'video_png';
+      image.x = 60;
+      image.y = 300;
+      viewport.addChild(image);
+
+      app.onUpdate(function () {
+        // if (label)
+        //   label.rotation += 0.01;
+        // if (image)
+        //   image.rotation += 0.01;
+        // if (button)
+        //   button.rotation -= 0.01;
+      });
+    }
+
+    Tiny.Loader
+      .add("checkbox_no_png", "./assets/checkbox-no.png")
+      .add("checkbox_yes_png", "./assets/checkbox-yes.png")
+      .add("radio_no_png", "./assets/radio-no.png")
+      .add("radio_yes_png", "./assets/radio-yes.png")
+      .add("video_png", "./assets/video.png")
+      .add("member_png", "./assets/member.png")
+      .add("member_disabled_png", "./assets/member_96.png")
+      .load(function (loader, res) {
+        ready(res);
+      });
+
+    function fun1(a, b) {
+      console.log('a=', a, 'b=', b);
+    }
+
+    function fun2() {
+      fun1.apply(null, arguments);
+    }
+  </script>
 </body>
 
 </html>

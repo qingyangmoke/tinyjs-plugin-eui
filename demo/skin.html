@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Tiny-按钮</title>
+  <meta charset="utf-8">
+  <script src="https://gw.alipayobjects.com/as/g/tiny/tiny/1.1.5/tiny.js"></script>
+  <!-- <script src="https://gw.alipayobjects.com/as/g/tiny-plugins/tinyjs-plugin-extract/1.0.7/index.js"></script> -->
+  <!-- <script src="http://localhost/gitlab/tiny/dist/tiny.debug.js"></script> -->
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=2,minimum-scale=1,user-scalable=1">
+  <style type="text/css">
+    body,
+    html,
+    canvas {
+      padding: 0;
+      margin: 0;
+      -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+      background-color: #ffffff;
+    }
+  </style>
+</head>
+
+<body>
+  <script type='text/template' id='skin1'>
+    <Skin>
+        <Button
+                width="100"
+                height="120"
+                source= "member_png"
+                source.down="member_disabled_png"
+                source.disabled="member_disabled_png"
+                scaleX="1.5"
+                scaleX.down="1.4"
+                scaleY="1.5"
+                scaleY.down="1.4"
+                x="100"
+                y="500"
+                >
+                <Label name="label" text="hello" style="align:center; font-family:Arial;font-size:36;font-style:italic;font-weight:bold;fill: ['#ffffff', '#00ff99'];stroke: #4a1850;strokeThickness: 5;dropShadow: true;dropShadowColor: #000000;dropShadowBlur: 4;dropShadowAngle:0.5;dropShadowDistance: 6;" width="100" ref="label"></Label>
+              </Button>
+             <MyCheckBox
+                x="350"
+                y="200"
+                scaleX="1.5"
+                scaleY="1.5"
+                enabled="true"></MyCheckBox>
+             <Image
+                width="100"
+                height="120"
+                source= "member_png"
+                source.down="member_disabled_png"
+                source.disabled="member_disabled_png"
+                scaleX="1.5" scaleX.down="1"
+                scaleY="1.5" scaleY.down="1"
+                x="300"
+                y="600"
+                enabled="false"
+                />
+    </Skin>
+  </script>
+  <script type='text/template' id='skin2'>
+    <Skin>
+      <Scroller width="400" height="400">
+        <Group width="400" height="800" ref="viewport">
+          <Button
+            width="100"
+            height="120"
+            source= "member_png"
+            source.down="member_disabled_png"
+            source.disabled="member_disabled_png"
+            scaleX="1.5"
+            scaleX.down="1.4"
+            scaleY="1.5"
+            scaleY.down="1.4"
+            x="100"
+            y="100"
+            ></Button>
+        </Group>
+    </Scroller>
+   </Skin>
+  </script>
+  <script type="text/template" id='skin3'>
+    <Skin>
+              <Button
+                width="100"
+                height="120"
+                source= "member_png"
+                source.down="member_disabled_png"
+                source.disabled="member_disabled_png"
+                scaleX="1.5"
+                scaleX.down="1.4"
+                scaleY="1.5"
+                scaleY.down="1.4"
+                x="100"
+                y="600"
+                >是是是</Button>
+             <Image
+                width="100"
+                height="120"
+                source= "member_png"
+                source.down="member_disabled_png"
+                source.disabled="member_disabled_png"
+                scaleX="1.5" scaleX.down="1"
+                scaleY="1.5" scaleY.down="1"
+                x="300"
+                y="600"
+                enabled="false"
+                >是是是</Image>
+             <RadioButton
+                source= "radio_no_png"
+                source.checked="radio_yes_png"
+                x="200"
+                y="800"
+                enabled="true"></RadioButton>
+             <RadioButton
+                groupName="group1"
+                source= "radio_no_png"
+                source.checked="radio_yes_png"
+                x="150"
+                y="800"
+                enabled="true"></RadioButton>
+             <RadioButton
+                groupName="group1"
+                source= "radio_no_png"
+                source.checked="radio_yes_png"
+                x="100"
+                y="800"
+                enabled="true"></RadioButton>
+             <CheckBoxButton
+                source= "checkbox_no_png"
+                source.checked="checkbox_yes_png"
+                x="250"
+                y="800"
+                enabled="true"></CheckBoxButton>
+             <CheckBoxButton
+                source= "checkbox_no_png"
+                source.checked="checkbox_yes_png"
+                x="300"
+                y="800"
+                enabled="true"></CheckBoxButton>
+             <MyCheckBox
+                x="350"
+                y="800"
+                scaleX="1.5"
+                scaleY="1.5"
+                enabled="true"></MyCheckBox>
+    </Skin>
+  </script>
+  <script src="../dist/index.debug.js"></script>
+  <script>
+
+    window.onerror = function (msg) {
+      alert(msg);
+    }
+
+    const ui = Tiny.eui;
+    ui.debug.enable = true;
+    ui.debug.debugFill = {
+      color: 0x000,
+      alpha: 0.1,
+    };
+
+    class MyCheckBox extends ui.CheckBoxButton {
+      constructor(width, height) {
+        super(width, height);
+        this.source = 'checkbox_no_png';
+        this.setStateData(ui.STATE.CHECKED, 'checkbox_yes_png');
+      }
+    }
+
+    ui.SkinLoader.register('MyCheckBox', MyCheckBox);
+
+    var config = {
+      showFPS: true, // 显示帧频
+      referWidth: 375,
+      dpi: 2, // 分辨率
+      // newWidth: 750,
+      // newHeight: 1334,
+      renderType: 2, // 1 webgl 2 canvas
+      renderOptions: {
+        // antialias: true,
+        // clearBeforeRender: true,
+        // transparent: false,
+        backgroundColor: 0xeeeeee // 画布背景色
+      }
+    };
+
+    var container = new Tiny.Container();
+
+
+    var app = new Tiny.Application(config);
+    // var renderSwitch = false;
+    // app.render = function () {
+    //   renderSwitch = !renderSwitch;
+    //   if (renderSwitch) {
+    //     app.renderer.render(app.camera);
+    //   }
+    // };
+
+    app.run(container);
+
+    var label, button, image;
+    function ready(res) {
+      skinObject = ui.SkinLoader.loadSkinUI(document.getElementById('skin2').innerHTML)
+      container.addChild(skinObject);
+
+      app.onUpdate(function () {
+        // if (label)
+        //   label.rotation += 0.01;
+        // if (image)
+        //   image.rotation += 0.01;
+        // if (button)
+        //   button.rotation -= 0.01;
+      });
+    }
+
+    Tiny.Loader
+      .add("checkbox_no_png", "./assets/checkbox-no.png")
+      .add("checkbox_yes_png", "./assets/checkbox-yes.png")
+      .add("radio_no_png", "./assets/radio-no.png")
+      .add("radio_yes_png", "./assets/radio-yes.png")
+      .add("video_png", "./assets/video.png")
+      .add("member_png", "./assets/member.png")
+      .add("member_disabled_png", "./assets/member_96.png")
+      .load(function (loader, res) {
+        ready(res);
+      });
+  </script>
+</body>
+
+</html>
